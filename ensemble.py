@@ -26,6 +26,7 @@ if uploaded_file is not None:
 
     # One-hot encode the data
     df = pd.get_dummies(df)
+    st.write(df.head())
 
     # Split the data into train and test sets
     X_train, X_test, y_train, y_test = train_test_split(df.drop(target_column, axis=1), df[target_column], test_size=0.2, random_state=42)
