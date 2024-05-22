@@ -11,13 +11,14 @@ import pandas as pd
 @st.cache
 def load_data(file):
     df = pd.read_csv(file)
-    return df.head()
+    return df
 
 # Sidebar for user inputs
 st.sidebar.header('Upload your CSV data')
 uploaded_file = st.sidebar.file_uploader("Upload your input CSV file", type=["csv"])
 if uploaded_file is not None:
     df = load_data(uploaded_file)
+    st.write(df.head())
 
     # Sidebar for user inputs
     st.sidebar.header('Choose Target Column')
