@@ -1,7 +1,8 @@
 import streamlit as st
-from sklearn.ensemble import RandomForestClassifier, BaggingClassifier
+from sklearn.ensemble import BaggingClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import pandas as pd
@@ -23,15 +24,14 @@ if uploaded_file is not None:
 
     # Sidebar for user inputs
     st.sidebar.header('Choose Classifier')
-    classifier_name = st.sidebar.selectbox('Classifier', ('Random Forest', 'Logistic Regression', 'SVM'))
+    classifier_name = st.sidebar.selectbox('Classifier', ('Decision Tree', 'Logistic Regression', 'KNN'))
 
-    if classifier_name == 'Random Forest':
-        n_estimators = st.sidebar.number_input('Number of estimators', 100, 5000, step=10)
-        classifier = RandomForestClassifier(n_estimators=n_estimators)
+    if classifier_name == 'Decision Tree':
+        classifier = DecisionTreeClassifier()
     elif classifier_name == 'Logistic Regression':
         classifier = LogisticRegression()
-    elif classifier_name == 'SVM':
-        classifier = SVC()
+    elif classifier_name == 'KNN':
+        classifier = KNeighborsClassifier()
 
     classifier.fit(X_train, y_train)
     y_pred = classifier.predict(X_test)
@@ -40,7 +40,8 @@ if uploaded_file is not None:
     st.write(f'Accuracy without ensemble: {accuracy}')
 
     # Now train an ensemble model with the selected classifier
-    ensemble = BaggingClassifier(base_estimator=classifier, n_estimators=10, random_state=0)
+    n_estimators = st.sidebar.number_input('Number of estimators', 100, 5000, step=10)
+    ensemble = BaggingClassifier(base_estimator=classifier, n_estimators=n_estimators, random_state=0)
     ensemble.fit(X_train, y_train)
     y_pred_ensemble = ensemble.predict(X_test)
     accuracy_ensemble = accuracy_score(y_test, y_pred_ensemble)
