@@ -11,7 +11,7 @@ import pandas as pd
 @st.cache
 def load_data(file):
     df = pd.read_csv(file)
-    return df
+    return df.head()
 
 # Sidebar for user inputs
 st.sidebar.header('Upload your CSV data')
@@ -19,8 +19,12 @@ uploaded_file = st.sidebar.file_uploader("Upload your input CSV file", type=["cs
 if uploaded_file is not None:
     df = load_data(uploaded_file)
 
+    # Sidebar for user inputs
+    st.sidebar.header('Choose Target Column')
+    target_column = st.sidebar.selectbox('Target Column', df.columns)
+
     # Split the data into train and test sets
-    X_train, X_test, y_train, y_test = train_test_split(df.drop('target', axis=1), df['target'], test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(df.drop(target_column, axis=1), df[target_column], test_size=0.2, random_state=42)
 
     # Sidebar for user inputs
     st.sidebar.header('Choose Classifier')
